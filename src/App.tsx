@@ -1,33 +1,39 @@
 import {SyntheticEvent, useEffect, useReducer, useState} from 'react'
 import {GiftList} from './components/GiftList'
-import {Gift, gifts, Gifts} from './data'
+import {getGifts, Gift} from './data'
 import './App.css'
 
 import {v4 as uuidv4} from 'uuid'
 
 interface Action {
   type: string
-  payload: Gift
+  payload: any //TODO: check type
 }
 
-function reducer(state: Gifts, action: Action) {
+function reducer(state: Gift[], action: Action) {
   switch (action.type) {
+    case 'init':
+      return action.payload
     case 'add':
-      const {data} = state
-      const newItems = [...data, action.payload]
-      return {...state, data: newItems}
+      return [...state, action.payload]
+    case 'delete':
+      return state.filter(gift => gift.id !== action.payload)
     default:
       return state
   }
 }
 
 function App() {
-  const {data} = gifts
-  const initialState = {data}
-
-  const [state, dispatch] = useReducer(reducer, initialState)
+  const [state, dispatch] = useReducer(reducer, [{id: '', name: ''}])
 
   const [formValues, setFormValues] = useState({name: ''})
+
+  useEffect(() => {
+    dispatch({
+      type: 'init',
+      payload: getGifts(),
+    })
+  }, [])
 
   const handleSubmit = (e: SyntheticEvent) => {
     e.preventDefault()
@@ -55,6 +61,13 @@ function App() {
     }
   }
 
+  const handleDelete = (id: string) => {
+    dispatch({
+      type: 'delete',
+      payload: id,
+    })
+  }
+
   return (
     <div className="app">
       <h1>Advency Gifts</h1>
@@ -66,9 +79,9 @@ function App() {
           onKeyDown={handleKeyDown}
           value={formValues.name}
         />
-        <button>Add</button>
+        <button className="btn">Add</button>
       </form>
-      <GiftList data={state.data} />
+      <GiftList gifts={state} handleDelete={handleDelete} />
     </div>
   )
 }
