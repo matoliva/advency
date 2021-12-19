@@ -11,3 +11,16 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.btn {
+  background-color: green;
+  color: white;
+  border: 0;
+  cursor: pointer;
+  padding: 3px;
+}
+
+.btn-danger {
+  background-color: red;
+  padding: 0.2rem 0.5rem 0.2rem 0.5rem;
+}

@@ -7,23 +7,21 @@ export interface Gift {
   amount?: number
 }
 
-export interface Gifts {
-  data: Gift[]
-}
+export const gifts: Gift[] = [
+  {
+    id: uuidv4(),
+    name: 'Baloon',
+  },
+  {
+    id: uuidv4(),
+    name: 'Socks',
+  },
+  {
+    id: uuidv4(),
+    name: 'Battleship',
+  },
+]
 
-export const gifts: Gifts = {
-  data: [
-    {
-      id: uuidv4(),
-      name: 'Baloon',
-    },
-    {
-      id: uuidv4(),
-      name: 'Socks',
-    },
-    {
-      id: uuidv4(),
-      name: 'Battleship',
-    },
-  ],
+export const getGifts = () => {
+  return gifts
 }

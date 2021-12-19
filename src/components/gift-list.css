@@ -1,5 +1,12 @@
 .gift-list {
   background-color: white;
-  padding: 2rem;
+  padding: 1rem;
   border-radius: 0.5rem;
+  min-width: 250px;
+}
+
+.list-item {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 0.5rem;
 }

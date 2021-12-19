@@ -1,11 +1,18 @@
-import {Gifts} from '../data'
 import './gift-list.css'
 
-export const GiftList = ({data}: Gifts) => {
+export const GiftList = (props: any) => {
   return (
     <ul className="gift-list">
-      {data.map(({id, name}) => (
-        <li key={id}>{name}</li>
+      {props.gifts.map((gift: any) => (
+        <li key={gift.id} className="list-item">
+          {gift.name}
+          <button
+            className="btn btn-danger"
+            onClick={() => props.handleDelete(gift.id)}
+          >
+            x
+          </button>
+        </li>
       ))}
     </ul>
   )
