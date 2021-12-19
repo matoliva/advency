@@ -1,4 +1,5 @@
 import './gift-list.css'
+import {gifts} from '../data'
 
 export const GiftList = (props: any) => {
   return (

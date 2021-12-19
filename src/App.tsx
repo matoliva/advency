@@ -7,7 +7,7 @@ import {v4 as uuidv4} from 'uuid'
 
 interface Action {
   type: string
-  payload: any //TODO: check type
+  payload?: any //TODO: check type
 }
 
 function reducer(state: Gift[], action: Action) {
@@ -18,6 +18,8 @@ function reducer(state: Gift[], action: Action) {
       return [...state, action.payload]
     case 'delete':
       return state.filter(gift => gift.id !== action.payload)
+    case 'deleteAll':
+      return []
     default:
       return state
   }
@@ -68,6 +70,12 @@ function App() {
     })
   }
 
+  const handleDeleteAll = () => {
+    dispatch({
+      type: 'deleteAll',
+    })
+  }
+
   return (
     <div className="app">
       <h1>Advency Gifts</h1>
@@ -82,6 +90,13 @@ function App() {
         <button className="btn">Add</button>
       </form>
       <GiftList gifts={state} handleDelete={handleDelete} />
+      {state.length > 0 ? (
+        <button className="btn btn-danger" onClick={handleDeleteAll}>
+          Delete All
+        </button>
+      ) : (
+        <h3>There are not gifts, you're a Grinch!</h3>
+      )}
     </div>
   )
 }
