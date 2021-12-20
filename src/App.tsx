@@ -15,7 +15,14 @@ function reducer(state: Gift[], action: Action) {
     case 'init':
       return action.payload
     case 'add':
-      return [...state, action.payload]
+      const newItems = state.filter(gift => {
+        return gift.name.toLowerCase() === action.payload.name.toLowerCase()
+      })
+      if (newItems.length > 0) {
+        return state
+      } else {
+        return [...state, action.payload]
+      }
     case 'delete':
       return state.filter(gift => gift.id !== action.payload)
     case 'deleteAll':
