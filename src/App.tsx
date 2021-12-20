@@ -14,11 +14,11 @@ function reducer(state: Gift[], action: Action) {
   switch (action.type) {
     case 'init':
       return action.payload
-    case 'add':
-      const newItems = state.filter(gift => {
+    case 'add': //TODO: check if it's de better place for the logic code
+      const newItem: Gift[] = state.filter((gift: Gift) => {
         return gift.name.toLowerCase() === action.payload.name.toLowerCase()
       })
-      if (newItems.length > 0) {
+      if (newItem.length > 0) {
         return state
       } else {
         return [...state, action.payload]
@@ -33,9 +33,11 @@ function reducer(state: Gift[], action: Action) {
 }
 
 function App() {
-  const [state, dispatch] = useReducer(reducer, [{id: '', name: ''}])
+  const [state, dispatch] = useReducer(reducer, [
+    {id: '', name: '', quantity: 0},
+  ])
 
-  const [formValues, setFormValues] = useState({name: ''})
+  const [formValues, setFormValues] = useState({name: '', quantity: 0})
 
   useEffect(() => {
     dispatch({
@@ -51,10 +53,14 @@ function App() {
 
     dispatch({
       type: 'add',
-      payload: {id: uuidv4(), name: formValues.name},
+      payload: {
+        id: uuidv4(),
+        name: formValues.name,
+        quantity: formValues.quantity,
+      },
     })
 
-    setFormValues({name: ''})
+    setFormValues({name: '', quantity: 0})
   }
 
   const handleChange = (e: React.FormEvent<HTMLInputElement>) => {
@@ -93,6 +99,14 @@ function App() {
           onChange={handleChange}
           onKeyDown={handleKeyDown}
           value={formValues.name}
+        />
+        <input
+          type="number"
+          name="quantity"
+          onChange={handleChange}
+          onKeyDown={handleKeyDown}
+          value={formValues.quantity}
+          style={{maxWidth: '2rem', margin: '0 0.5rem 0 0.5rem'}}
         />
         <button className="btn">Add</button>
       </form>
