@@ -8,8 +8,6 @@ interface Action {
 
 function reducer(state: Gift[], action: Action) {
   switch (action.type) {
-    case 'init':
-      return action.payload
     case 'add': //TODO: check if it's de better place for the logic code
       const newItem: Gift[] = state.filter((gift: Gift) => {
         return gift.name.toLowerCase() === action.payload.name.toLowerCase()
@@ -19,6 +17,9 @@ function reducer(state: Gift[], action: Action) {
       } else {
         return [...state, action.payload]
       }
+    case 'update':
+      const filterState = state.filter(gift => gift.id !== action.payload.id)
+      return [...filterState, action.payload]
     case 'delete':
       return state.filter(gift => gift.id !== action.payload)
     case 'deleteAll':
@@ -42,5 +43,5 @@ export const useLocalStorage = () => {
     window.localStorage.setItem('gifts', JSON.stringify(state))
   }, [state])
 
-  return [state, dispatch]
+  return [state, dispatch] as const
 }

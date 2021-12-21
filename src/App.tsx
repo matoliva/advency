@@ -18,24 +18,51 @@ function App() {
 
   const [data, dispatch] = useLocalStorage()
 
+  const [isEditMode, setIsEditMode] = useState(false)
+
+  const [giftSelected, setGiftSelected] = useState({
+    id: '',
+    name: '',
+    quantity: 0,
+    url: '',
+    to: '',
+  })
+
   const handleSubmit = (e: SyntheticEvent) => {
     e.preventDefault()
 
-    if (!formValues.name) return
-    const newData = {
-      id: uuidv4(),
-      name: formValues.name,
-      quantity: formValues.quantity,
-      url: formValues.url,
-      to: formValues.to,
+    //TODO: code form validations
+
+    if (isEditMode) {
+      handleOnClose()
+      const updatedGift = {
+        id: giftSelected.id,
+        name: formValues.name || giftSelected.name,
+        quantity: formValues.quantity || giftSelected.quantity,
+        url: formValues.url || giftSelected.url,
+        to: formValues.to || giftSelected.to,
+      }
+
+      dispatch({
+        type: 'update',
+        payload: updatedGift,
+      })
+    } else {
+      const newData = {
+        id: uuidv4(),
+        name: formValues.name,
+        quantity: formValues.quantity,
+        url: formValues.url,
+        to: formValues.to,
+      }
+
+      dispatch({
+        type: 'add',
+        payload: newData,
+      })
     }
-
-    dispatch({
-      type: 'add',
-      payload: newData,
-    })
-
     setFormValues({name: '', quantity: 0, url: '', to: ''})
+    setGiftSelected({id: '', name: '', quantity: 0, url: '', to: ''})
   }
 
   const handleChange = (e: React.FormEvent<HTMLInputElement>) => {
@@ -65,11 +92,19 @@ function App() {
   }
 
   //Modal method
-  const handleOnClose = (e: any) => {
+  const handleOnClose = () => {
     setIsOpen(false)
+    setIsEditMode(false)
+    setGiftSelected({id: '', name: '', quantity: 0, url: '', to: ''})
   }
 
-  const handleModalClick = () => {
+  const handleModalClick = (event: any) => {
+    if (event.id) {
+      setIsEditMode(true)
+      setGiftSelected(event)
+    } else {
+      setIsEditMode(false)
+    }
     setIsOpen(true)
   }
 
@@ -83,7 +118,11 @@ function App() {
       >
         Add
       </button>
-      <GiftList gifts={data} handleDelete={handleDelete} />
+      <GiftList
+        gifts={data}
+        handleDelete={handleDelete}
+        handleModalClick={handleModalClick}
+      />
       {data.length > 0 ? (
         <button
           className="btn btn-danger"
@@ -102,7 +141,7 @@ function App() {
             name="name"
             onChange={handleChange}
             onKeyDown={handleKeyDown}
-            value={formValues.name}
+            value={formValues.name || giftSelected.name}
             placeholder="Add your gift"
           />
           <input
@@ -110,14 +149,14 @@ function App() {
             name="quantity"
             onChange={handleChange}
             onKeyDown={handleKeyDown}
-            value={formValues.quantity}
+            value={formValues.quantity || giftSelected.quantity}
           />
           <input
             type="text"
             name="url"
             onChange={handleChange}
             onKeyDown={handleKeyDown}
-            value={formValues.url}
+            value={formValues.url || giftSelected.url}
             placeholder="http://image..."
           />
           <input
@@ -125,11 +164,11 @@ function App() {
             name="to"
             onChange={handleChange}
             onKeyDown={handleKeyDown}
-            value={formValues.to}
+            value={formValues.to || giftSelected.to}
             placeholder="To..."
           />
           <button type="submit" className="btn">
-            Add
+            {isEditMode ? 'Update' : 'Add'}
           </button>
         </form>
       </Modal>
