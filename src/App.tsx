@@ -5,6 +5,7 @@ import './App.css'
 import {v4 as uuidv4} from 'uuid'
 import {useLocalStorage} from './hooks/useLocalStorage'
 import {Modal} from './components/Modal'
+import {randomGifts} from './data'
 
 function App() {
   const [formValues, setFormValues] = useState({
@@ -108,6 +109,11 @@ function App() {
     setIsOpen(true)
   }
 
+  const handleSurpriseClick = () => {
+    const surprise = randomGifts[Math.floor(Math.random() * 3)]
+    setFormValues(surprise)
+  }
+
   return (
     <div className="app">
       <h1>Advency Gifts</h1>
@@ -135,6 +141,11 @@ function App() {
         <h3>There are not gifts, you're a Grinch!</h3>
       )}
       <Modal isOpen={isOpen} message="Add gifts" onClose={handleOnClose}>
+        {!isEditMode && (
+          <button className="btn" onClick={handleSurpriseClick}>
+            Surprise me
+          </button>
+        )}
         <form onSubmit={handleSubmit}>
           <input
             type="text"
