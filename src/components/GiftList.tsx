@@ -8,7 +8,7 @@ export const GiftList = (props: any) => {
         props.gifts.map((gift: any) => (
           <li key={gift.id} className="list-item">
             <img src={gift.url || DefaultImage} alt={gift.name} />
-            {`${gift.name} (${gift.quantity})`}
+            {`${gift.name} (${gift.quantity}) to: ${gift.to ? gift.to : 'N/A'}`}
             <button
               className="btn btn-danger"
               onClick={() => props.handleDelete(gift.id)}
