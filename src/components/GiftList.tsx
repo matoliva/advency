@@ -6,6 +6,7 @@ export const GiftList = (props: any) => {
       {props.gifts &&
         props.gifts.map((gift: any) => (
           <li key={gift.id} className="list-item">
+            <img src={gift.url} alt={gift.name} />
             {`${gift.name} (${gift.quantity})`}
             <button
               className="btn btn-danger"

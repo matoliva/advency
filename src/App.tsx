@@ -6,7 +6,7 @@ import {v4 as uuidv4} from 'uuid'
 import {useLocalStorage} from './hooks/useLocalStorage'
 
 function App() {
-  const [formValues, setFormValues] = useState({name: '', quantity: 0})
+  const [formValues, setFormValues] = useState({name: '', quantity: 0, url: ''})
 
   const [data, dispatch] = useLocalStorage()
 
@@ -25,6 +25,7 @@ function App() {
       id: uuidv4(),
       name: formValues.name,
       quantity: formValues.quantity,
+      url: formValues.url,
     }
 
     dispatch({
@@ -32,7 +33,7 @@ function App() {
       payload: newData,
     })
 
-    setFormValues({name: '', quantity: 0})
+    setFormValues({name: '', quantity: 0, url: ''})
   }
 
   const handleChange = (e: React.FormEvent<HTMLInputElement>) => {
@@ -71,6 +72,7 @@ function App() {
           onChange={handleChange}
           onKeyDown={handleKeyDown}
           value={formValues.name}
+          placeholder="Add your gift"
         />
         <input
           type="number"
@@ -78,7 +80,14 @@ function App() {
           onChange={handleChange}
           onKeyDown={handleKeyDown}
           value={formValues.quantity}
-          style={{maxWidth: '2rem', margin: '0 0.5rem 0 0.5rem'}}
+        />
+        <input
+          type="text"
+          name="url"
+          onChange={handleChange}
+          onKeyDown={handleKeyDown}
+          value={formValues.url}
+          placeholder="http://image..."
         />
         <button className="btn">Add</button>
       </form>
