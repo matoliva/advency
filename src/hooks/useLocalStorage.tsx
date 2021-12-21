@@ -1,20 +1,46 @@
-import {useEffect, useState} from 'react'
+import {useEffect, useReducer} from 'react'
 import {Gift} from '../data'
 
-export const useLocalStorage = (key: string, defaultValue: Gift | [] = []) => {
-  const [state, setState] = useState(() => {
-    const data = window.localStorage.getItem(key)
+interface Action {
+  type: string
+  payload?: any //TODO: check type
+}
+
+function reducer(state: Gift[], action: Action) {
+  switch (action.type) {
+    case 'init':
+      return action.payload
+    case 'add': //TODO: check if it's de better place for the logic code
+      const newItem: Gift[] = state.filter((gift: Gift) => {
+        return gift.name.toLowerCase() === action.payload.name.toLowerCase()
+      })
+      if (newItem.length > 0) {
+        return state
+      } else {
+        return [...state, action.payload]
+      }
+    case 'delete':
+      return state.filter(gift => gift.id !== action.payload)
+    case 'deleteAll':
+      return []
+    default:
+      return state
+  }
+}
+
+export const useLocalStorage = () => {
+  const [state, dispatch] = useReducer(reducer, [], () => {
+    const data = window.localStorage.getItem('gifts')
     if (data) {
-      debugger
       return JSON.parse(data)
     } else {
-      return defaultValue
+      return []
     }
   })
 
   useEffect(() => {
-    window.localStorage.setItem(key, JSON.stringify(state))
-  }, [key, state])
+    window.localStorage.setItem('gifts', JSON.stringify(state))
+  }, [state])
 
-  return [state, setState]
+  return [state, dispatch]
 }
