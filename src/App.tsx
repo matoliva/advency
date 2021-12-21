@@ -1,4 +1,4 @@
-import {SyntheticEvent, useState} from 'react'
+import {SyntheticEvent, useEffect, useState} from 'react'
 import {GiftList} from './components/GiftList'
 import './App.css'
 
@@ -13,6 +13,7 @@ function App() {
     quantity: 0,
     url: '',
     to: '',
+    price: 0,
   })
 
   const [isOpen, setIsOpen] = useState(false)
@@ -27,7 +28,22 @@ function App() {
     quantity: 0,
     url: '',
     to: '',
+    price: 0,
   })
+
+  const [total, setTotal] = useState(0)
+
+  useEffect(() => {
+    if (data.length > 0) {
+      const total = data.reduce(
+        (accum, item) => accum + item.price * item.quantity,
+        0,
+      )
+      setTotal(total)
+    }
+  }, [data])
+
+  //arr.reduce((a, b) => ({x: a.x + b.x}))
 
   const handleSubmit = (e: SyntheticEvent) => {
     e.preventDefault()
@@ -42,6 +58,7 @@ function App() {
         quantity: formValues.quantity || giftSelected.quantity,
         url: formValues.url || giftSelected.url,
         to: formValues.to || giftSelected.to,
+        price: formValues.price || giftSelected.price,
       }
 
       dispatch({
@@ -55,6 +72,7 @@ function App() {
         quantity: formValues.quantity,
         url: formValues.url,
         to: formValues.to,
+        price: formValues.price,
       }
 
       dispatch({
@@ -62,8 +80,8 @@ function App() {
         payload: newData,
       })
     }
-    setFormValues({name: '', quantity: 0, url: '', to: ''})
-    setGiftSelected({id: '', name: '', quantity: 0, url: '', to: ''})
+    setFormValues({name: '', quantity: 0, url: '', to: '', price: 0})
+    setGiftSelected({id: '', name: '', quantity: 0, url: '', to: '', price: 0})
   }
 
   const handleChange = (e: React.FormEvent<HTMLInputElement>) => {
@@ -96,7 +114,7 @@ function App() {
   const handleOnClose = () => {
     setIsOpen(false)
     setIsEditMode(false)
-    setGiftSelected({id: '', name: '', quantity: 0, url: '', to: ''})
+    setGiftSelected({id: '', name: '', quantity: 0, url: '', to: '', price: 0})
   }
 
   const handleModalClick = (event: any) => {
@@ -129,6 +147,8 @@ function App() {
         handleDelete={handleDelete}
         handleModalClick={handleModalClick}
       />
+      <hr />
+      <h3>Total: {total}</h3>
       {data.length > 0 ? (
         <button
           className="btn btn-danger"
@@ -177,6 +197,13 @@ function App() {
             onKeyDown={handleKeyDown}
             value={formValues.to || giftSelected.to}
             placeholder="To..."
+          />
+          <input
+            type="number"
+            name="price"
+            onChange={handleChange}
+            onKeyDown={handleKeyDown}
+            value={formValues.price || giftSelected.price}
           />
           <button type="submit" className="btn">
             {isEditMode ? 'Update' : 'Add'}
