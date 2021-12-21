@@ -3,7 +3,7 @@ import {v4 as uuidv4} from 'uuid'
 export interface Gift {
   id: string
   name: string
-  imgUrl?: string
+  url?: string
   quantity?: number
 }
 
