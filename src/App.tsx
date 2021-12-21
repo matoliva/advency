@@ -1,63 +1,35 @@
-import {SyntheticEvent, useEffect, useReducer, useState} from 'react'
+import {SyntheticEvent, useEffect, useState} from 'react'
 import {GiftList} from './components/GiftList'
-import {getGifts, Gift} from './data'
 import './App.css'
 
 import {v4 as uuidv4} from 'uuid'
-
-interface Action {
-  type: string
-  payload?: any //TODO: check type
-}
-
-function reducer(state: Gift[], action: Action) {
-  switch (action.type) {
-    case 'init':
-      return action.payload
-    case 'add': //TODO: check if it's de better place for the logic code
-      const newItem: Gift[] = state.filter((gift: Gift) => {
-        return gift.name.toLowerCase() === action.payload.name.toLowerCase()
-      })
-      if (newItem.length > 0) {
-        return state
-      } else {
-        return [...state, action.payload]
-      }
-    case 'delete':
-      return state.filter(gift => gift.id !== action.payload)
-    case 'deleteAll':
-      return []
-    default:
-      return state
-  }
-}
+import {useLocalStorage} from './hooks/useLocalStorage'
 
 function App() {
-  const [state, dispatch] = useReducer(reducer, [
-    {id: '', name: '', quantity: 0},
-  ])
-
   const [formValues, setFormValues] = useState({name: '', quantity: 0})
+
+  const [data, dispatch] = useLocalStorage()
 
   useEffect(() => {
     dispatch({
       type: 'init',
-      payload: getGifts(),
+      payload: data,
     })
-  }, [])
+  }, [data, dispatch])
 
   const handleSubmit = (e: SyntheticEvent) => {
     e.preventDefault()
 
     if (!formValues.name) return
+    const newData = {
+      id: uuidv4(),
+      name: formValues.name,
+      quantity: formValues.quantity,
+    }
 
     dispatch({
       type: 'add',
-      payload: {
-        id: uuidv4(),
-        name: formValues.name,
-        quantity: formValues.quantity,
-      },
+      payload: newData,
     })
 
     setFormValues({name: '', quantity: 0})
@@ -110,8 +82,8 @@ function App() {
         />
         <button className="btn">Add</button>
       </form>
-      <GiftList gifts={state} handleDelete={handleDelete} />
-      {state.length > 0 ? (
+      <GiftList gifts={data} handleDelete={handleDelete} />
+      {data.length > 0 ? (
         <button className="btn btn-danger" onClick={handleDeleteAll}>
           Delete All
         </button>
