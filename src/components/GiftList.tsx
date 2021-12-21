@@ -14,9 +14,15 @@ export const GiftList = (props: any) => {
               .replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}`}
             <button
               className="btn"
-              onClick={() => props.handleModalClick(gift)}
+              onClick={() => props.handleModalClick(gift, 'edit')}
             >
               Edit
+            </button>
+            <button
+              className="btn"
+              onClick={() => props.handleModalClick(gift, 'duplicate')}
+            >
+              Duplicate
             </button>
             <button
               className="btn btn-danger"
