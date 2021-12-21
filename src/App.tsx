@@ -1,5 +1,6 @@
 import {SyntheticEvent, useEffect, useState} from 'react'
 import {GiftList} from './components/GiftList'
+import DefaultImage from './assets/images/default-image.jpeg'
 import './App.css'
 
 import {v4 as uuidv4} from 'uuid'
@@ -17,6 +18,7 @@ function App() {
   })
 
   const [isOpen, setIsOpen] = useState(false)
+  const [isOpenPreview, setIsOpenPreview] = useState(false)
 
   const [data, dispatch] = useLocalStorage()
 
@@ -117,6 +119,10 @@ function App() {
     setGiftSelected({id: '', name: '', quantity: 0, url: '', to: '', price: 0})
   }
 
+  const handleOnClosePreview = () => {
+    setIsOpenPreview(false)
+  }
+
   const handleModalClick = (event: any, action?: string) => {
     debugger
     switch (action) {
@@ -158,13 +164,22 @@ function App() {
       <hr />
       <h3>Total: ${total.toFixed(2)}</h3>
       {data.length > 0 ? (
-        <button
-          className="btn btn-danger"
-          style={{padding: '0.5rem 1rem'}}
-          onClick={handleDeleteAll}
-        >
-          Delete All
-        </button>
+        <>
+          <button
+            className="btn btn-danger"
+            style={{padding: '0.5rem 1rem'}}
+            onClick={handleDeleteAll}
+          >
+            Delete All
+          </button>
+          <button
+            className="btn"
+            style={{padding: '0.5rem 1rem'}}
+            onClick={() => setIsOpenPreview(true)}
+          >
+            Preview
+          </button>
+        </>
       ) : (
         <h3>There are not gifts, you're a Grinch!</h3>
       )}
@@ -217,6 +232,21 @@ function App() {
             {isEditMode ? 'Update' : 'Add'}
           </button>
         </form>
+      </Modal>
+      <Modal
+        isOpen={isOpenPreview}
+        message="To buy"
+        onClose={handleOnClosePreview}
+      >
+        {data.map(gift => (
+          <li key={gift.id} className="list-item">
+            <img src={gift.url || DefaultImage} alt={gift.name} />
+            {`${gift.name} (${gift.quantity}) to: ${gift.to ? gift.to : 'N/A'}`}
+            {` - $${(gift.price * gift.quantity)
+              .toFixed(2)
+              .replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}`}
+          </li>
+        ))}
       </Modal>
     </div>
   )
