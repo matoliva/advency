@@ -1,21 +1,17 @@
-import {SyntheticEvent, useEffect, useState} from 'react'
+import {SyntheticEvent, useState} from 'react'
 import {GiftList} from './components/GiftList'
 import './App.css'
 
 import {v4 as uuidv4} from 'uuid'
 import {useLocalStorage} from './hooks/useLocalStorage'
+import {Modal} from './components/Modal'
 
 function App() {
   const [formValues, setFormValues] = useState({name: '', quantity: 0, url: ''})
 
-  const [data, dispatch] = useLocalStorage()
+  const [isOpen, setIsOpen] = useState(false)
 
-  useEffect(() => {
-    dispatch({
-      type: 'init',
-      payload: data,
-    })
-  }, [data, dispatch])
+  const [data, dispatch] = useLocalStorage()
 
   const handleSubmit = (e: SyntheticEvent) => {
     e.preventDefault()
@@ -62,43 +58,67 @@ function App() {
     })
   }
 
+  //Modal method
+  const handleOnClose = (e: any) => {
+    setIsOpen(false)
+  }
+
+  const handleModalClick = () => {
+    setIsOpen(true)
+  }
+
   return (
     <div className="app">
       <h1>Advency Gifts</h1>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          name="name"
-          onChange={handleChange}
-          onKeyDown={handleKeyDown}
-          value={formValues.name}
-          placeholder="Add your gift"
-        />
-        <input
-          type="number"
-          name="quantity"
-          onChange={handleChange}
-          onKeyDown={handleKeyDown}
-          value={formValues.quantity}
-        />
-        <input
-          type="text"
-          name="url"
-          onChange={handleChange}
-          onKeyDown={handleKeyDown}
-          value={formValues.url}
-          placeholder="http://image..."
-        />
-        <button className="btn">Add</button>
-      </form>
+      <button
+        className="btn"
+        style={{padding: '0.5rem 2rem'}}
+        onClick={handleModalClick}
+      >
+        Add
+      </button>
       <GiftList gifts={data} handleDelete={handleDelete} />
       {data.length > 0 ? (
-        <button className="btn btn-danger" onClick={handleDeleteAll}>
+        <button
+          className="btn btn-danger"
+          style={{padding: '0.5rem 1rem'}}
+          onClick={handleDeleteAll}
+        >
           Delete All
         </button>
       ) : (
         <h3>There are not gifts, you're a Grinch!</h3>
       )}
+      <Modal isOpen={isOpen} message="Add gifts" onClose={handleOnClose}>
+        <form onSubmit={handleSubmit}>
+          <input
+            type="text"
+            name="name"
+            onChange={handleChange}
+            onKeyDown={handleKeyDown}
+            value={formValues.name}
+            placeholder="Add your gift"
+          />
+          <input
+            type="number"
+            name="quantity"
+            onChange={handleChange}
+            onKeyDown={handleKeyDown}
+            value={formValues.quantity}
+          />
+          <input
+            type="text"
+            name="url"
+            onChange={handleChange}
+            onKeyDown={handleKeyDown}
+            value={formValues.url}
+            placeholder="http://image..."
+          />
+          <button type="submit" className="btn">
+            Add
+          </button>
+        </form>
+      </Modal>
     </div>
   )
 }
