@@ -7,7 +7,12 @@ import {useLocalStorage} from './hooks/useLocalStorage'
 import {Modal} from './components/Modal'
 
 function App() {
-  const [formValues, setFormValues] = useState({name: '', quantity: 0, url: ''})
+  const [formValues, setFormValues] = useState({
+    name: '',
+    quantity: 0,
+    url: '',
+    to: '',
+  })
 
   const [isOpen, setIsOpen] = useState(false)
 
@@ -22,6 +27,7 @@ function App() {
       name: formValues.name,
       quantity: formValues.quantity,
       url: formValues.url,
+      to: formValues.to,
     }
 
     dispatch({
@@ -29,7 +35,7 @@ function App() {
       payload: newData,
     })
 
-    setFormValues({name: '', quantity: 0, url: ''})
+    setFormValues({name: '', quantity: 0, url: '', to: ''})
   }
 
   const handleChange = (e: React.FormEvent<HTMLInputElement>) => {
@@ -113,6 +119,14 @@ function App() {
             onKeyDown={handleKeyDown}
             value={formValues.url}
             placeholder="http://image..."
+          />
+          <input
+            type="text"
+            name="to"
+            onChange={handleChange}
+            onKeyDown={handleKeyDown}
+            value={formValues.to}
+            placeholder="To..."
           />
           <button type="submit" className="btn">
             Add
