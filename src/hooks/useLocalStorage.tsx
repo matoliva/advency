@@ -7,16 +7,10 @@ interface Action {
 }
 
 function reducer(state: Gift[], action: Action) {
+  debugger
   switch (action.type) {
     case 'add': //TODO: check if it's de better place for the logic code
-      const newItem: Gift[] = state.filter((gift: Gift) => {
-        return gift.name.toLowerCase() === action.payload.name.toLowerCase()
-      })
-      if (newItem.length > 0) {
-        return state
-      } else {
-        return [...state, action.payload]
-      }
+      return [...state, action.payload]
     case 'update':
       const filterState = state.filter(gift => gift.id !== action.payload.id)
       return [...filterState, action.payload]

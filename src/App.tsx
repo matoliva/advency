@@ -49,9 +49,8 @@ function App() {
     e.preventDefault()
 
     //TODO: code form validations
-
+    debugger
     if (isEditMode) {
-      handleOnClose()
       const updatedGift = {
         id: giftSelected.id,
         name: formValues.name || giftSelected.name,
@@ -80,6 +79,7 @@ function App() {
         payload: newData,
       })
     }
+    handleOnClose()
     setFormValues({name: '', quantity: 0, url: '', to: '', price: 0})
     setGiftSelected({id: '', name: '', quantity: 0, url: '', to: '', price: 0})
   }
@@ -117,13 +117,21 @@ function App() {
     setGiftSelected({id: '', name: '', quantity: 0, url: '', to: '', price: 0})
   }
 
-  const handleModalClick = (event: any) => {
-    if (event.id) {
-      setIsEditMode(true)
-      setGiftSelected(event)
-    } else {
-      setIsEditMode(false)
+  const handleModalClick = (event: any, action?: string) => {
+    debugger
+    switch (action) {
+      case 'edit':
+        setIsEditMode(true)
+        setGiftSelected(event)
+        break
+      case 'duplicate':
+        setFormValues(event)
+        break
+      default:
+        setIsEditMode(false)
+        break
     }
+
     setIsOpen(true)
   }
 
@@ -148,7 +156,7 @@ function App() {
         handleModalClick={handleModalClick}
       />
       <hr />
-      <h3>Total: {total}</h3>
+      <h3>Total: ${total.toFixed(2)}</h3>
       {data.length > 0 ? (
         <button
           className="btn btn-danger"
