@@ -10,6 +10,12 @@ export const GiftList = (props: any) => {
             <img src={gift.url || DefaultImage} alt={gift.name} />
             {`${gift.name} (${gift.quantity}) to: ${gift.to ? gift.to : 'N/A'}`}
             <button
+              className="btn"
+              onClick={() => props.handleModalClick(gift)}
+            >
+              Edit
+            </button>
+            <button
               className="btn btn-danger"
               onClick={() => props.handleDelete(gift.id)}
             >
