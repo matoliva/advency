@@ -9,6 +9,9 @@ export const GiftList = (props: any) => {
           <li key={gift.id} className="list-item">
             <img src={gift.url || DefaultImage} alt={gift.name} />
             {`${gift.name} (${gift.quantity}) to: ${gift.to ? gift.to : 'N/A'}`}
+            {` - $${(gift.price * gift.quantity)
+              .toFixed(2)
+              .replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}`}
             <button
               className="btn"
               onClick={() => props.handleModalClick(gift)}
