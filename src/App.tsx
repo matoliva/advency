@@ -121,8 +121,6 @@ function App() {
     setIsOpenPreview(false)
   }
 
-  const handlePrintModal = () => {}
-
   const handleModalClick = (event: any, action?: string) => {
     debugger
     switch (action) {
