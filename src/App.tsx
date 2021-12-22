@@ -1,6 +1,9 @@
-import {SyntheticEvent, useEffect, useState} from 'react'
+import {SyntheticEvent, useEffect, useRef, useState} from 'react'
 import {GiftList} from './components/GiftList'
 import DefaultImage from './assets/images/default-image.jpeg'
+import VolumeOn from './assets/images/volume-on.svg'
+import VolumeOff from './assets/images/volume-off.svg'
+import music from './assets/music/cut-song.mp3'
 import './App.css'
 
 import {v4 as uuidv4} from 'uuid'
@@ -34,6 +37,10 @@ function App() {
   })
 
   const [total, setTotal] = useState(0)
+
+  const ref = useRef<any>(null)
+
+  const [toggleMusic, setToggleMusic] = useState(false)
 
   useEffect(() => {
     if (data.length > 0) {
@@ -144,9 +151,39 @@ function App() {
     setFormValues(surprise)
   }
 
+  const onPlay = () => {
+    if (toggleMusic) {
+      ref.current.pause()
+    } else {
+      ref.current.play()
+    }
+
+    setToggleMusic(!toggleMusic)
+  }
+
   return (
     <div className="app">
       <h1>Advency Gifts</h1>
+      <button
+        onClick={onPlay}
+        style={{
+          backgroundColor: 'transparent',
+          border: 'none',
+          cursor: 'pointer',
+        }}
+      >
+        <img
+          style={{
+            width: '1.5rem',
+          }}
+          src={toggleMusic ? VolumeOn : VolumeOff}
+          alt={toggleMusic ? 'speaker on' : 'speaker off'}
+        />
+      </button>
+      <audio ref={ref} controls style={{visibility: 'hidden'}}>
+        <source src={music} type="audio/mpeg" />
+        Your browser does not support the audio element.
+      </audio>
       <button
         className="btn"
         style={{padding: '0.5rem 2rem'}}
