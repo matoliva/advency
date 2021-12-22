@@ -45,8 +45,6 @@ function App() {
     }
   }, [data])
 
-  //arr.reduce((a, b) => ({x: a.x + b.x}))
-
   const handleSubmit = (e: SyntheticEvent) => {
     e.preventDefault()
 
@@ -122,6 +120,8 @@ function App() {
   const handleOnClosePreview = () => {
     setIsOpenPreview(false)
   }
+
+  const handlePrintModal = () => {}
 
   const handleModalClick = (event: any, action?: string) => {
     debugger
@@ -237,14 +237,12 @@ function App() {
         isOpen={isOpenPreview}
         message="To buy"
         onClose={handleOnClosePreview}
+        isPrintable={true}
       >
         {data.map(gift => (
-          <li key={gift.id} className="list-item">
+          <li key={gift.id} style={{display: 'flex'}}>
             <img src={gift.url || DefaultImage} alt={gift.name} />
             {`${gift.name} (${gift.quantity}) to: ${gift.to ? gift.to : 'N/A'}`}
-            {` - $${(gift.price * gift.quantity)
-              .toFixed(2)
-              .replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}`}
           </li>
         ))}
       </Modal>

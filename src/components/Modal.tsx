@@ -6,9 +6,16 @@ interface Props {
   message: string
   onClose: any
   children: React.ReactNode
+  isPrintable?: boolean
 }
 
-export const Modal = ({isOpen, message, onClose, children}: Props) => {
+export const Modal = ({
+  isOpen,
+  message,
+  onClose,
+  children,
+  isPrintable,
+}: Props) => {
   if (!isOpen) return null
   return ReactDOM.createPortal(
     <div className="modal">
@@ -18,6 +25,11 @@ export const Modal = ({isOpen, message, onClose, children}: Props) => {
         <button className="btn btn-danger" onClick={onClose}>
           Close
         </button>
+        {isPrintable && (
+          <button className="btn" onClick={() => window.print()}>
+            Print
+          </button>
+        )}
       </div>
     </div>,
     document.body,
