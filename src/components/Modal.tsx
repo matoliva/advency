@@ -22,11 +22,11 @@ export const Modal = ({
       <div className="modal-content">
         <h1>{message}</h1>
         {children}
-        <button className="btn btn-danger" onClick={onClose}>
+        <button className="btn btn-danger modal-print" onClick={onClose}>
           Close
         </button>
         {isPrintable && (
-          <button className="btn" onClick={() => window.print()}>
+          <button className="btn modal-print" onClick={() => window.print()}>
             Print
           </button>
         )}
